@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: 'jvm'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8081']  # Variant A
+      - targets: ['host.docker.internal:8082']  # Variant C
+      - targets: ['host.docker.internal:8083']  # Variant D
+
+  - job_name: 'jmeter'
+    static_configs:
+      - targets: ['jmeter-master:9270']
+
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres:9187']

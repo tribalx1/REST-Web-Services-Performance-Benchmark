@@ -1,0 +1,38 @@
+# Prometheus configuration for REST benchmark monitoring
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'rest-benchmark'
+
+scrape_configs:
+  # Variant A - JAX-RS
+  - job_name: 'variant-a-jaxrs'
+    static_configs:
+      - targets: ['localhost:8091']
+        labels:
+          variant: 'A'
+          stack: 'JAX-RS'
+
+  # Variant C - Spring MVC
+  - job_name: 'variant-c-springmvc'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['localhost:8082']
+        labels:
+          variant: 'C'
+          stack: 'Spring-MVC'
+
+  # Variant D - Spring Data REST
+  - job_name: 'variant-d-springdata'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['localhost:8083']
+        labels:
+          variant: 'D'
+          stack: 'Spring-Data-REST'
+
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']

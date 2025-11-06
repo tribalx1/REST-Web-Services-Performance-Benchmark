@@ -1,0 +1,108 @@
+# JMX Exporter configuration for Prometheus
+# Usage: java -javaagent:jmx_prometheus_javaagent-0.20.0.jar=<port>:jmx-config.yml -jar app.jar
+
+---
+startDelaySeconds: 0
+ssl: false
+lowercaseOutputName: true
+lowercaseOutputLabelNames: true
+
+# Whitelist of mbeans to include
+whitelistObjectNames:
+  - "java.lang:type=Threading,*"
+  - "java.lang:type=Memory,*"
+  - "java.lang:type=GarbageCollector,*"
+  - "java.lang:type=MemoryPool,*"
+  - "java.lang:type=OperatingSystem,*"
+  - "java.lang:type=Runtime,*"
+  - "com.zaxxer.hikari:type=Pool,*"
+  - "org.hibernate:type=Statistics,*"
+
+# Rules to transform mbean names to Prometheus metrics
+rules:
+  # JVM Thread metrics
+  - pattern: 'java.lang<type=Threading><>(ThreadCount|DaemonThreadCount|PeakThreadCount|TotalStartedThreadCount): (\d+)'
+    name: jvm_threads_$1
+    value: $2
+    type: GAUGE
+
+  # JVM Memory metrics
+  - pattern: 'java.lang<type=Memory><HeapMemoryUsage>(committed|init|max|used): (\d+)'
+    name: jvm_memory_heap_bytes
+    value: $2
+    labels:
+      area: heap
+      type: $1
+    type: GAUGE
+
+  - pattern: 'java.lang<type=Memory><NonHeapMemoryUsage>(committed|init|max|used): (\d+)'
+    name: jvm_memory_nonheap_bytes
+    value: $2
+    labels:
+      area: nonheap
+      type: $1
+    type: GAUGE
+
+  # GC metrics
+  - pattern: 'java.lang<type=GarbageCollector, name=([\w\s]+)><>(CollectionCount|CollectionTime): (\d+)'
+    name: jvm_gc_$2
+    value: $3
+    labels:
+      gc: $1
+    type: COUNTER
+
+  # Memory Pool metrics
+  - pattern: 'java.lang<type=MemoryPool, name=([\w\s]+)><Usage>(committed|init|max|used): (\d+)'
+    name: jvm_memory_pool_bytes
+    value: $3
+    labels:
+      pool: $1
+      type: $2
+    type: GAUGE
+
+  # Operating System metrics
+  - pattern: 'java.lang<type=OperatingSystem><>(ProcessCpuLoad|SystemCpuLoad): (\d+\.\d+)'
+    name: jvm_cpu_$1
+    value: $2
+    type: GAUGE
+
+  - pattern: 'java.lang<type=OperatingSystem><>(FreePhysicalMemorySize|TotalPhysicalMemorySize|CommittedVirtualMemorySize): (\d+)'
+    name: jvm_os_memory_$1_bytes
+    value: $2
+    type: GAUGE
+
+  # HikariCP metrics
+  - pattern: 'com.zaxxer.hikari<type=Pool, name=(.+)><>(ActiveConnections|IdleConnections|TotalConnections|ThreadsAwaitingConnection): (\d+)'
+    name: hikaricp_$2
+    value: $3
+    labels:
+      pool: $1
+    type: GAUGE
+
+  - pattern: 'com.zaxxer.hikari<type=Pool, name=(.+)><>(ConnectionTimeoutRate|ConnectionCreationRate): (\d+\.\d+)'
+    name: hikaricp_$2
+    value: $3
+    labels:
+      pool: $1
+    type: GAUGE
+
+  # Hibernate Statistics
+  - pattern: 'org.hibernate<type=Statistics><>(EntityInsertCount|EntityUpdateCount|EntityDeleteCount|EntityLoadCount|EntityFetchCount): (\d+)'
+    name: hibernate_entity_$1
+    value: $2
+    type: COUNTER
+
+  - pattern: 'org.hibernate<type=Statistics><>(QueryExecutionCount|QueryCacheHitCount|QueryCacheMissCount|QueryCachePutCount): (\d+)'
+    name: hibernate_query_$1
+    value: $2
+    type: COUNTER
+
+  - pattern: 'org.hibernate<type=Statistics><>(SecondLevelCacheHitCount|SecondLevelCacheMissCount|SecondLevelCachePutCount): (\d+)'
+    name: hibernate_cache_$1
+    value: $2
+    type: COUNTER
+
+  - pattern: 'org.hibernate<type=Statistics><>(SessionOpenCount|SessionCloseCount|FlushCount): (\d+)'
+    name: hibernate_session_$1
+    value: $2
+    type: COUNTER
