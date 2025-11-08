@@ -29,15 +29,15 @@
 
 ## T2 — Résultats par scénario et variante
 
-**À remplir après les tests JMeter**
+**✅ Données récupérées des tests JMeter (08/11/2025)**
 
 | Scénario | Mesure | A : Jersey | C : @RestController | D : Spring Data REST |
 |----------|--------|------------|---------------------|----------------------|
-| READ-heavy | RPS | ___ | ___ | ___ |
-| READ-heavy | p50 (ms) | ___ | ___ | ___ |
-| READ-heavy | p95 (ms) | ___ | ___ | ___ |
-| READ-heavy | p99 (ms) | ___ | ___ | ___ |
-| READ-heavy | Err % | ___ | ___ | ___ |
+| READ-heavy | RPS | 122.25 | 90.74 | ___ |
+| READ-heavy | p50 (ms) | 140 | 142 | ___ |
+| READ-heavy | p95 (ms) | 251 | 431 | ___ |
+| READ-heavy | p99 (ms) | 331 | 814 | ___ |
+| READ-heavy | Err % | 0.00% | 0.00% | ___ |
 | JOIN-filter | RPS | ___ | ___ | ___ |
 | JOIN-filter | p50 (ms) | ___ | ___ | ___ |
 | JOIN-filter | p95 (ms) | ___ | ___ | ___ |
@@ -93,12 +93,12 @@
 
 ## T5 — Détails par endpoint (scénario MIXED)
 
-**À remplir avec les résultats JMeter pour le scénario MIXED**
+**✅ Données partielles du test READ (08/11/2025) - À compléter avec test MIXED complet**
 
 | Endpoint | Variante | RPS | p95 (ms) | Err % | Observations |
 |----------|----------|-----|----------|-------|--------------|
-| GET /items | A | ___ | ___ | ___% | ___ |
-|  | C | ___ | ___ | ___% | ___ |
+| GET /items | A | 61.14 | 305 | 0.00% | Median: 184ms, Max: 1706ms |
+|  | C | 45.39 | 564 | 0.00% | Median: 247ms, Max: 10402ms (spike) |
 |  | D | ___ | ___ | ___% | ___ |
 | POST /items | A | ___ | ___ | ___% | ___ |
 |  | C | ___ | ___ | ___% | ___ |
@@ -109,8 +109,8 @@
 | DELETE /items/{id} | A | ___ | ___ | ___% | ___ |
 |  | C | ___ | ___ | ___% | ___ |
 |  | D | ___ | ___ | ___% | ___ |
-| GET /categories | A | ___ | ___ | ___% | ___ |
-|  | C | ___ | ___ | ___% | ___ |
+| GET /categories | A | 61.47 | 210 | 0.00% | Median: 109ms, Max: 543ms |
+|  | C | 45.50 | 230 | 0.00% | Median: 68ms, Max: 7289ms (spike) |
 |  | D | ___ | ___ | ___% | ___ |
 | POST /categories | A | ___ | ___ | ___% | ___ |
 |  | C | ___ | ___ | ___% | ___ |
@@ -131,15 +131,22 @@
 
 ## T7 — Synthèse & conclusion
 
-**À remplir après l'analyse complète de tous les tests**
+**⚠️ Analyse partielle (A vs C uniquement - 08/11/2025) - Variant D à tester**
 
 | Critère | Meilleure variante | Écart (justifier) | Commentaires |
 |---------|-------------------|-------------------|--------------|
-| Débit global (RPS) | ___ | ___% vs ___ | ___ |
-| Latence p95 | ___ | ___ms vs ___ | ___ |
-| Stabilité (erreurs) | ___ | ___% vs ___% | ___ |
-| Empreinte CPU/RAM | ___ | ___% vs ___% | ___ |
-| Facilité d'appro relationnelle | ___ | JOIN FETCH / N+1 / HAL | ___ |
+| Débit global (RPS) | **A (Jersey)** | +34.7% (122 vs 91) | Jersey/JAX-RS significativement plus rapide pour READ-heavy |
+| Latence p95 | **A (Jersey)** | -41.8% (251ms vs 431ms) | Jersey a des latences ~2x meilleures à p95 |
+| Latence p99 | **A (Jersey)** | -59.3% (331ms vs 814ms) | Très grande différence aux hauts percentiles |
+| Stabilité (erreurs) | **Égalité** | 0% vs 0% | Aucune erreur sur les deux variantes |
+| Empreinte CPU/RAM | ___ | ___% vs ___% | Données Grafana nécessaires pour comparaison |
+| Facilité d'appro relationnelle | ___ | JOIN FETCH / N+1 / HAL | Tests supplémentaires nécessaires (JOIN scenarios) |
+
+### 📊 Observations clés (READ-heavy test):
+- **Variant A (Jersey)** montre de meilleures performances globales (+35% RPS)
+- **Variant C** a des spikes de latence importants (Max: 10402ms vs 1706ms)
+- Les deux variantes ont 0% d'erreurs - bonne stabilité
+- **Variant D** non testé - à compléter pour analyse complète
 
 ---
 

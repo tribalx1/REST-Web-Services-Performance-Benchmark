@@ -69,12 +69,12 @@ docker run --rm `
     -v "${currentPath}:/jmeter" `
     justb4/jmeter:latest `
     -n `
-    -t /jmeter/scripts/read_heavy_test.jmx `
-    -JHOST=host.docker.internal `
-    -JPORT=$port `
-    -l /jmeter/$jtlFile `
+    -t "/jmeter/scripts/read_heavy_test.jmx" `
+    "-JHOST=host.docker.internal" `
+    "-JPORT=$port" `
+    -l "/jmeter/$jtlFile" `
     -e `
-    -o /jmeter/$reportDir
+    -o "/jmeter/$reportDir"
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host ""
