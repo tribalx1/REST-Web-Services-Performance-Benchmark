@@ -119,13 +119,13 @@ def main():
     print(f"Generating {NUM_CATEGORIES} categories...")
     categories = generate_categories()
     write_csv('categories.csv', categories, ['code', 'name', 'updated_at'])
-    print(f"✓ Written {len(categories)} categories to categories.csv")
+    print(f"[OK] Written {len(categories)} categories to categories.csv")
     
     # Generate items
     print(f"Generating ~{NUM_ITEMS} items...")
     items = generate_items(categories)
     write_csv('items.csv', items, ['sku', 'name', 'price', 'stock', 'category_id', 'updated_at'])
-    print(f"✓ Written {len(items)} items to items.csv")
+    print(f"[OK] Written {len(items)} items to items.csv")
     
     print("\nData generation complete!")
     print(f"Categories: {len(categories)}")

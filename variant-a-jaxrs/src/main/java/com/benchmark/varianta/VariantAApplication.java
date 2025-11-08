@@ -3,6 +3,8 @@ package com.benchmark.varianta;
 import com.benchmark.varianta.config.JerseyConfig;
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.binder.jvm.*;
+import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
 import io.micrometer.prometheus.PrometheusConfig;
 import io.micrometer.prometheus.PrometheusMeterRegistry;
 import io.prometheus.client.CollectorRegistry;
@@ -37,6 +39,14 @@ public class VariantAApplication {
             // Initialize Prometheus metrics
             CollectorRegistry collectorRegistry = new CollectorRegistry();
             meterRegistry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT, collectorRegistry, Clock.SYSTEM);
+            
+            // Bind JVM metrics
+            new ClassLoaderMetrics().bindTo(meterRegistry);
+            new JvmMemoryMetrics().bindTo(meterRegistry);
+            new JvmGcMetrics().bindTo(meterRegistry);
+            new ProcessorMetrics().bindTo(meterRegistry);
+            new JvmThreadMetrics().bindTo(meterRegistry);
+            
             logger.info("Prometheus metrics initialized");
             
             // Initialize JPA EntityManagerFactory

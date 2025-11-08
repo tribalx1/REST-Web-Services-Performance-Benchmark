@@ -1,0 +1,65 @@
+═══════════════════════════════════════════════════════════════
+T0 — CONFIGURATION MATÉRIELLE & LOGICIELLE
+═══════════════════════════════════════════════════════════════
+
+✅ TABLEAU T0 - Copier/Coller ces valeurs dans votre tableau
+
+Machine (CPU, cœurs, RAM):
+Intel Core i5-6200U @ 2.30GHz, 2 cores, 4 logical processors, 7.8 GB RAM
+
+OS / Kernel:
+Microsoft Windows 10 Pro, Build 19045
+
+Java version:
+Java 23 (build 23+37-2369)
+
+Docker/Compose versions:
+Docker 28.0.1, Docker Compose v2.33.1
+
+PostgreSQL version:
+PostgreSQL 14.19 (Alpine Linux)
+
+JMeter version:
+JMeter 5.6+ (à vérifier selon votre installation locale)
+
+Prometheus / Grafana / InfluxDB:
+Prometheus:latest / Grafana:latest / InfluxDB:2.7-alpine
+
+JVM flags (Xms/Xmx, GC):
+Default Spring Boot (Xmx auto-calculated, G1GC default on Java 23)
+Pour tests avec flags personnalisés: -Xms512m -Xmx2g -XX:+UseG1GC
+
+HikariCP (min/max/timeout):
+min: 10, max: 20, timeout: 30s, idle: 600s, max-lifetime: 1800s
+
+═══════════════════════════════════════════════════════════════
+INFORMATIONS SUPPLÉMENTAIRES
+═══════════════════════════════════════════════════════════════
+
+Base de données:
+- 2,000 categories
+- 100,000 items (~50 items par catégorie)
+- Indexes: category_id, updated_at, sku, code
+
+Ports utilisés:
+- Variant A (JAX-RS):      8081
+- Variant C (Spring MVC):  8082
+- Variant D (Spring Data): 8083
+- PostgreSQL:              5600 → 5432 (Docker)
+- Prometheus:              9090
+- Grafana:                 3000 (admin/admin)
+- InfluxDB:                8086
+
+Configuration Tomcat (Variants C & D):
+- max-threads: 200
+- min-spare-threads: 10
+- connection-timeout: 20000ms
+
+Configuration JPA/Hibernate:
+- batch_size: 20
+- ddl-auto: validate
+- show_sql: false
+- use_second_level_cache: false
+- use_query_cache: false
+
+═══════════════════════════════════════════════════════════════

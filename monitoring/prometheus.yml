@@ -8,8 +8,9 @@ global:
 scrape_configs:
   # Variant A - JAX-RS
   - job_name: 'variant-a-jaxrs'
+    metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ['localhost:8091']
+      - targets: ['host.docker.internal:8081']
         labels:
           variant: 'A'
           stack: 'JAX-RS'

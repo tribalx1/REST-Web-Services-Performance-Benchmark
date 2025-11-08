@@ -11,7 +11,7 @@ spring:
     name: variant-d-springdata
   
   datasource:
-    url: jdbc:postgresql://localhost:5432/benchmark
+    url: jdbc:postgresql://localhost:5600/benchmark
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
